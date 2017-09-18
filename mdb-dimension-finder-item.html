@@ -79,6 +79,10 @@
             is: 'mdb-dimension-finder-item',
 
             properties: {
+                dimension: {
+                    type: String
+                },
+
                 name: {
                     type: String
                 },
@@ -116,12 +120,17 @@
                 checked: {
                     type: Boolean,
                     value: false
+                },
+
+                id:{
+                    type: String
                 }
             },
 
             _checkedChanged: function (e) {
                 this.checked = e.currentTarget.checked;
-                this.fire('dimension-checked', {
+                this.fire('appcoldimension-checked', {
+                    dimension: this.dimension,
                     checked: this.checked,
                     name: this.name,
                     humanVerified: this.humanVerified,
@@ -129,7 +138,8 @@
                     systemRecommended: this.systemRecommended,
                     showSystemRecommendation: this.showSystemRecommendation,
                     showItemCheckbox: this.showItemCheckbox,
-                    recommendation: this.recommendation
+                    recommendation: this.recommendation,
+                    id: this.id
                 });
             }
         });

@@ -118,12 +118,18 @@ Custom property | Description | Default
     </template>
     <div class="dimension-finder">
       <mdb-search-box placeholder="Search for [[_toLowerCase(dimension)]] name" search-path="label" source="[[_items]]" search-results="{{_searchResults}}"></mdb-search-box>
-      <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="[[emptyMessage]]">
+            <mdb-simple-list height="{{height}}" items="{{_searchResults}}" empty-message="[[emptyMessage]]" dimension="[[dimension]]">
         <template>
           <paper-item>
-            <mdb-dimension-finder-item name="[[item.label]]" checked="{{item.checked}}" show-system-recommendation="[[item.showSystemRecommendation]]"
-              show-human-verification="[[item.showHumanVerification]]" recommendation="[[item.predictedColumns]]" human-verified="[[item.humanVerified]]"
-              system-recommended="[[item.predictedColumns]]" show-item-checkbox="[[item.showItemCheckbox]]"></mdb-dimension-finder-item>
+                        <mdb-dimension-finder-item name="[[item.label]]" dimension="[[item.dimension]]"
+                                                   checked="{{item.checked}}"
+                                                   show-system-recommendation="[[item.showSystemRecommendation]]"
+                                                   show-human-verification="[[item.showHumanVerification]]"
+                                                   recommendation="[[item.predictedColumns]]"
+                                                   human-verified="[[item.humanVerified]]"
+                                                   system-recommended="[[item.predictedColumns]]"
+                                                   show-item-checkbox="[[item.showItemCheckbox]]"
+                                                   id="{{item.id}}"></mdb-dimension-finder-item>
           </paper-item>
         </template>
       </mdb-simple-list>
@@ -228,26 +234,33 @@ Custom property | Description | Default
         var that = this,
           list = this.querySelector('mdb-simple-list');
         if (list) {
-          list.addEventListener('selected-item-changed', function () {
+                    list.addEventListener(this.showItemCheckbox ? 'click-value-changed' : 'selected-item-changed', function () {
             var selected = this.selected;
             var items = that.querySelectorAll('mdb-dimension-finder-item');
 
+                        var isUnChecked = false;
             if (items && items.length > 0) {
               items.forEach(function (item, index) {
                 if (index == selected) {
+                                    isUnChecked = !item.checked;
                   Polymer.dom(item).setAttribute('selected', true);
                 } else {
                   Polymer.dom(item).removeAttribute('selected');
                 }
               });
             }
+
+                        if (isUnChecked)
             that.selectedDimension = this.selectedItem;
+                        else
+                            that.selectedDimension = '';
           });
-          list.addEventListener('dimension-checked', function (e) {
+
+                    /*list.addEventListener('dimension-checked', function (e) {
             var args = e.detail || {};
             args.dimension = that.dimension;
             that.fire('dimension-checked', args);
-          });
+                     });*/
         }
       },
 
